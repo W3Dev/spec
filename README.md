@@ -3,10 +3,12 @@
 A registry of software specifications adopted or tracked by w3dev, published
 as a static site at **https://spec.w3dev.app**.
 
-Each spec is a single markdown file with structured frontmatter. The site
-(built with [Eleventy](https://www.11ty.dev/)) renders that file as a human
-page, and also exposes it — and the whole registry — in machine-readable
-form so agents and tooling can consume it directly.
+One spec = one directory: `specs/<slug>/SPEC.md` holds the markdown file
+with structured frontmatter, plus any optional reference files (diagrams,
+examples, etc.) alongside it in that same directory. The site (built with
+[Eleventy](https://www.11ty.dev/)) renders `SPEC.md` as a human page, and
+also exposes it — and the whole registry — in machine-readable form so
+agents and tooling can consume it directly.
 
 ## URL contract
 
@@ -14,7 +16,8 @@ form so agents and tooling can consume it directly.
 | --- | --- |
 | `/` | Landing page — the registry list |
 | `/specs/<slug>/` | Rendered HTML page for one spec |
-| `/specs/<slug>.md` | The raw markdown source, byte-for-byte (for `curl`, agents, diffing) |
+| `/specs/<slug>/SPEC.md` | The raw markdown source, byte-for-byte (for `curl`, agents, diffing) |
+| `/specs/<slug>/<file>` | Any reference/asset file bundled alongside that spec (copied through as-is) |
 | `/specs.json` | Machine-readable index: every spec's frontmatter plus `url` and `raw_url` |
 | `/llms.txt` | [llms.txt](https://llmstxt.org/)-convention plain-text index: title, one-line summary, link |
 
@@ -24,14 +27,17 @@ never hand-edit them.
 
 ## Adding a spec
 
-1. Create `specs/<slug>.md`, where `<slug>` is a kebab-case id
-   (`^[a-z0-9]+(-[a-z0-9]+)*$`) — the filename must equal the frontmatter
-   `id`.
-2. Fill in frontmatter per the reference below. `specs/conventional-commits.md`
-   is the canonical example — copy its shape.
+1. Create `specs/<slug>/SPEC.md`, where `<slug>` is a kebab-case id
+   (`^[a-z0-9]+(-[a-z0-9]+)*$`) — the directory name must equal the
+   frontmatter `id`.
+2. Fill in frontmatter per the reference below.
+   `specs/conventional-commits/SPEC.md` is the canonical example — copy its
+   shape.
 3. Write the body in markdown. There are no required sections, but new specs
    generally cover: what it is, why w3dev adopted it, any w3dev-specific
-   notes/deviations, and how it's enforced.
+   notes/deviations, and how it's enforced. Drop any reference files
+   (diagrams, examples) the spec needs into the same directory alongside
+   `SPEC.md` — they're copied through to `/specs/<slug>/<file>` as-is.
 4. Run `pnpm validate` — it must pass before you open a PR.
 5. Open a PR. CI runs `pnpm validate` and `pnpm build` on every PR; merging
    to `main` deploys automatically (see below).
@@ -67,8 +73,10 @@ Schema lives at `schema/spec-frontmatter.schema.json` (JSON Schema, draft
 | `supersedes` | string | Spec id this replaces |
 | `superseded_by` | string | Spec id that replaces this one |
 
-Status lives in frontmatter only — content is flat (`specs/<slug>.md`, no
-subfolders); never encode status in directory structure.
+Status lives in frontmatter only — never encode status in the directory
+name. Each spec gets exactly one directory (`specs/<slug>/`) holding
+`SPEC.md` plus its own reference files; don't nest specs or add per-status
+subfolders.
 
 > **Quote date values.** Write `updated: "2026-08-22"`, not
 > `updated: 2026-08-22`. Unquoted, YAML parses it as a native date and it

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Validates frontmatter of every specs/*.md file against schema/spec-frontmatter.schema.json.
-// Also checks that frontmatter.id === filename (without .md).
+// Validates frontmatter of every specs/*/SPEC.md file against schema/spec-frontmatter.schema.json.
+// Also checks that frontmatter.id === the spec's parent directory name.
 // Exits 1 if any file fails validation.
 
 import { readFileSync, readdirSync } from "node:fs";
@@ -23,30 +23,40 @@ const ajv = new Ajv2020({ allErrors: true, strict: true });
 addFormats(ajv);
 const validate = ajv.compile(schema);
 
-let specFiles = [];
+let specSlugs = [];
 try {
-  specFiles = readdirSync(specsDir).filter((f) => f.endsWith(".md"));
+  specSlugs = readdirSync(specsDir, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name);
 } catch (err) {
   console.error(`Could not read specs directory at ${specsDir}: ${err.message}`);
   process.exit(1);
 }
 
-if (specFiles.length === 0) {
-  console.warn(`No spec files found in ${specsDir}.`);
+if (specSlugs.length === 0) {
+  console.warn(`No spec directories found in ${specsDir}.`);
 }
 
 let hasErrors = false;
 
-for (const filename of specFiles.sort()) {
-  const filePath = path.join(specsDir, filename);
-  const slug = filename.replace(/\.md$/, "");
-  const raw = readFileSync(filePath, "utf8");
+for (const slug of specSlugs.sort()) {
+  const relPath = path.join("specs", slug, "SPEC.md");
+  const filePath = path.join(specsDir, slug, "SPEC.md");
+
+  let raw;
+  try {
+    raw = readFileSync(filePath, "utf8");
+  } catch (err) {
+    console.error(`✗ ${relPath}\n  - could not read file: ${err.message}`);
+    hasErrors = true;
+    continue;
+  }
 
   let frontmatter;
   try {
     ({ data: frontmatter } = matter(raw));
   } catch (err) {
-    console.error(`✗ ${filename}\n  - could not parse frontmatter: ${err.message}`);
+    console.error(`✗ ${relPath}\n  - could not parse frontmatter: ${err.message}`);
     hasErrors = true;
     continue;
   }
@@ -62,17 +72,17 @@ for (const filename of specFiles.sort()) {
   }
 
   if (frontmatter.id !== undefined && frontmatter.id !== slug) {
-    errors.push(`id "${frontmatter.id}" does not match filename "${slug}"`);
+    errors.push(`id "${frontmatter.id}" does not match directory "${slug}"`);
   }
 
   if (errors.length > 0) {
     hasErrors = true;
-    console.error(`✗ ${filename}`);
+    console.error(`✗ ${relPath}`);
     for (const e of errors) {
       console.error(`  - ${e}`);
     }
   } else {
-    console.log(`✓ ${filename}`);
+    console.log(`✓ ${relPath}`);
   }
 }
 
@@ -80,5 +90,5 @@ if (hasErrors) {
   console.error("\nvalidation failed");
   process.exit(1);
 } else {
-  console.log(`\nvalidation passed (${specFiles.length} spec${specFiles.length === 1 ? "" : "s"})`);
+  console.log(`\nvalidation passed (${specSlugs.length} spec${specSlugs.length === 1 ? "" : "s"})`);
 }

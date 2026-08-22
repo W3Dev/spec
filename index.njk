@@ -101,7 +101,7 @@ bodyClass: page-home
           <time datetime="{{ d.updated }}" title="{{ d.updated }}">{{ d.updated | relativeDate }}</time>
         </div>
         <div class="cell cell-links" role="cell" data-label="Links">
-          <a class="raw-link mono" href="/specs/{{ d.id }}.md">raw</a>
+          <a class="raw-link mono" href="/specs/{{ d.id }}/SPEC.md">raw</a>
           {% if d.canonical_url %}<a class="ext-link" href="{{ d.canonical_url }}" aria-label="Canonical source for {{ d.title }}" title="Canonical source">↗</a>{% endif %}
         </div>
       </div>

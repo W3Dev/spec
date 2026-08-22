@@ -21,9 +21,12 @@ function relativeDate(dateStr) {
 }
 
 export default function (eleventyConfig) {
-  // Raw markdown source must be served byte-for-byte at /specs/<slug>.md
-  // (separate from the rendered /specs/<slug>/ page built from the same file).
-  eleventyConfig.addPassthroughCopy("specs/*.md");
+  // Raw markdown source must be served byte-for-byte at /specs/<slug>/SPEC.md
+  // (separate from the rendered /specs/<slug>/ page built from the same
+  // file). This also passthrough-copies any reference/asset files that
+  // live alongside SPEC.md (diagrams, examples, etc.) at any depth, so a
+  // spec can relative-link its own bundled files.
+  eleventyConfig.addPassthroughCopy("specs/*/**");
 
   // Static, hand-authored CSS/JS — no bundler, passthrough-copied as-is.
   eleventyConfig.addPassthroughCopy("css");
@@ -32,10 +35,12 @@ export default function (eleventyConfig) {
   // Repo documentation, not a site page.
   eleventyConfig.ignores.add("./README.md");
 
-  // Collection of every spec, driven purely by frontmatter — no subfolders.
+  // Collection of every spec, driven purely by frontmatter. Scoped strictly
+  // to SPEC.md so any other markdown file dropped in a spec's directory
+  // (e.g. notes.md) never joins the registry.
   eleventyConfig.addCollection("specs", (collectionApi) =>
     collectionApi
-      .getFilteredByGlob("specs/*.md")
+      .getFilteredByGlob("specs/*/SPEC.md")
       .sort((a, b) => a.data.id.localeCompare(b.data.id))
   );
 

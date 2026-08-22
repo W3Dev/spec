@@ -12,10 +12,10 @@ bodyClass: page-spec
   <p class="spec-summary">{{ summary }}</p>
 
   <div class="spec-actions">
-    <button type="button" class="copy-raw-btn" id="copy-raw-btn" data-raw-url="/specs/{{ id }}.md">
+    <button type="button" class="copy-raw-btn" id="copy-raw-btn" data-raw-url="/specs/{{ id }}/SPEC.md">
       <span class="copy-raw-label">Copy raw markdown</span>
     </button>
-    <a class="raw-link mono" href="/specs/{{ id }}.md">/specs/{{ id }}.md</a>
+    <a class="raw-link mono" href="/specs/{{ id }}/SPEC.md">/specs/{{ id }}/SPEC.md</a>
   </div>
 
   <table class="facts-table">
@@ -36,5 +36,5 @@ bodyClass: page-spec
     {{ content | safe }}
   </div>
 
-  <p class="raw-link-footer"><a href="/specs/{{ id }}.md" class="mono">View raw markdown source →</a></p>
+  <p class="raw-link-footer"><a href="/specs/{{ id }}/SPEC.md" class="mono">View raw markdown source →</a></p>
 </article>

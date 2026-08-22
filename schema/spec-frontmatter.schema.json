@@ -2,14 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://spec.w3dev.app/schema/spec-frontmatter.schema.json",
   "title": "w3dev spec frontmatter",
-  "description": "Frontmatter contract for every specs/<slug>.md file in the w3dev specs registry.",
+  "description": "Frontmatter contract for every specs/<slug>/SPEC.md file in the w3dev specs registry.",
   "type": "object",
   "additionalProperties": false,
   "required": ["id", "title", "status", "summary", "owner", "updated"],
   "properties": {
     "id": {
       "type": "string",
-      "description": "Kebab-case slug. Must equal the filename (without .md).",
+      "description": "Kebab-case slug. Must equal the spec's parent directory name.",
       "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
     },
     "title": {
