@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@11.15.1",
   "description": "w3dev specs — a registry of software specifications served at https://spec.w3dev.app",
   "scripts": {
     "dev": "eleventy --serve",
