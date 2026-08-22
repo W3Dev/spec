@@ -17,7 +17,7 @@ export default class {
     const entries = collections.specs.map((item) => toSpecEntry(item.data));
 
     const lines = [
-      "# w3dev specs",
+      "# Specs Directory",
       "",
       "> Registry of software specifications tracked and adopted by w3dev.",
       "",

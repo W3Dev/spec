@@ -1,4 +1,4 @@
-// w3dev specs — single static JS file, passthrough-copied as-is.
+// Specs Directory — single static JS file, passthrough-copied as-is.
 // No framework. The registry table is filtered/sorted client-side over the
 // server-rendered DOM only (no fetch); the "copy raw markdown" button on the
 // spec detail page is the one place that fetches, by design (see brief).

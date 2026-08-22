@@ -1,4 +1,4 @@
-# w3dev specs
+# Specs Directory
 
 A registry of software specifications adopted or tracked by w3dev, published
 as a static site at **https://spec.w3dev.app**.

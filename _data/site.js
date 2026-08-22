@@ -1,6 +1,6 @@
 // Site-wide constants shared across templates.
 export default {
-  name: "w3dev specs",
+  name: "Specs Directory",
   url: "https://spec.w3dev.app",
   // Best-known GitHub location for this registry (org "w3dev", repo "spec").
   github: "https://github.com/w3dev/spec",
