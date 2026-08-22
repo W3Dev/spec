@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://spec.w3dev.app/schema/spec-frontmatter.schema.json",
+  "title": "w3dev spec frontmatter",
+  "description": "Frontmatter contract for every specs/<slug>.md file in the w3dev specs registry.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "status", "summary", "owner", "updated"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "Kebab-case slug. Must equal the filename (without .md).",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": ["official", "unofficial", "draft", "adopted", "deprecated"]
+    },
+    "summary": {
+      "type": "string",
+      "maxLength": 160
+    },
+    "owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "updated": {
+      "type": "string",
+      "format": "date"
+    },
+    "number": {
+      "type": "string",
+      "pattern": "^[0-9]{4}$"
+    },
+    "canonical_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "version": {
+      "type": "string"
+    },
+    "maturity": {
+      "type": "string",
+      "enum": ["experimental", "stable", "legacy"]
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "applies_to": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "adopted_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "related": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "supersedes": {
+      "type": "string"
+    },
+    "superseded_by": {
+      "type": "string"
+    }
+  }
+}

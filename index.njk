@@ -1,0 +1,111 @@
+---
+layout: base.njk
+title: Registry
+bodyClass: page-home
+---
+{% set total = collections.specs.length %}
+{% set officialCount = (collections.specs | whereStatus("official")).length %}
+{% set allTags = collections.specs | collectTags %}
+
+<section class="identity-strip">
+  <h1 class="site-name">w3dev specs</h1>
+  <p class="tagline">{{ site.tagline }}</p>
+  <p class="subline">{{ site.subline }}</p>
+  <p class="live-count mono">{{ total }} spec{% if total != 1 %}s{% endif %} · {{ officialCount }} official</p>
+</section>
+
+<section class="controls-bar" aria-label="Filter and sort specs">
+  <div class="controls-row controls-row-top">
+    <input
+      type="search"
+      id="search-input"
+      class="search-input"
+      placeholder="Search name, slug, tags, summary…"
+      aria-label="Search specs"
+      autocomplete="off">
+    <div class="control-sort">
+      <label for="sort-select">Sort</label>
+      <select id="sort-select" aria-label="Sort specs">
+        <option value="name">Name</option>
+        <option value="updated">Updated</option>
+        <option value="status">Status</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="chip-group" id="status-chips" role="group" aria-label="Filter by status">
+    <button type="button" class="chip is-active" data-status="">All</button>
+    <button type="button" class="chip" data-status="official">Official</button>
+    <button type="button" class="chip" data-status="unofficial">Unofficial</button>
+    <button type="button" class="chip" data-status="draft">Draft</button>
+    <button type="button" class="chip" data-status="adopted">Adopted</button>
+    <button type="button" class="chip" data-status="deprecated">Deprecated</button>
+  </div>
+
+  {% if allTags.length %}
+  <div class="chip-group" id="tag-chips" role="group" aria-label="Filter by tag">
+    {% for tag in allTags %}
+    <button type="button" class="chip chip-tag" data-tag="{{ tag }}">{{ tag }}</button>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+
+<section class="registry-table-wrap">
+  <p class="results-empty" id="results-empty" hidden>No specs match your filters.</p>
+
+  <div class="registry-table" role="table" aria-label="Spec registry" id="registry-table">
+    <div class="table-row table-head" role="row">
+      <div class="cell cell-name" role="columnheader">Name</div>
+      <div class="cell cell-status" role="columnheader">Status</div>
+      <div class="cell cell-version" role="columnheader">Version</div>
+      <div class="cell cell-tags" role="columnheader">Tags</div>
+      <div class="cell cell-updated" role="columnheader">Updated</div>
+      <div class="cell cell-links" role="columnheader">Links</div>
+    </div>
+
+    <div class="table-body" id="table-body" role="rowgroup">
+      {% for spec in collections.specs %}
+      {% set d = spec.data %}
+      <div
+        class="table-row"
+        role="row"
+        tabindex="0"
+        data-href="/specs/{{ d.id }}/"
+        data-name="{{ d.title | lower }}"
+        data-slug="{{ d.id }}"
+        data-status="{{ d.status }}"
+        data-tags="{{ (d.tags or []) | join(',') | lower }}"
+        data-search="{{ (d.title ~ ' ' ~ d.id ~ ' ' ~ ((d.tags or []) | join(' ')) ~ ' ' ~ d.summary) | lower }}"
+        data-updated="{{ d.updated }}">
+        <div class="cell cell-name" role="cell" data-label="Name">
+          <div class="name-stack">
+            <a class="row-title" href="/specs/{{ d.id }}/">{{ d.title }}</a>
+            <span class="row-meta mono">{% if d.number %}spec-{{ d.number }} · {% endif %}{{ d.id }}</span>
+            <span class="row-summary">{{ d.summary }}</span>
+          </div>
+        </div>
+        <div class="cell cell-status" role="cell" data-label="Status">
+          <span class="badge badge-{{ d.status }}">{{ d.status }}</span>
+        </div>
+        <div class="cell cell-version" role="cell" data-label="Version">
+          <span class="mono">{{ d.version or "—" }}</span>
+        </div>
+        <div class="cell cell-tags" role="cell" data-label="Tags">
+          {% for tag in d.tags or [] %}
+          {% if loop.index0 < 3 %}<span class="pill">{{ tag }}</span>{% endif %}
+          {% endfor %}
+          {% if (d.tags or []).length > 3 %}<span class="pill pill-more">+{{ (d.tags or []).length - 3 }}</span>{% endif %}
+        </div>
+        <div class="cell cell-updated" role="cell" data-label="Updated">
+          <time datetime="{{ d.updated }}" title="{{ d.updated }}">{{ d.updated | relativeDate }}</time>
+        </div>
+        <div class="cell cell-links" role="cell" data-label="Links">
+          <a class="raw-link mono" href="/specs/{{ d.id }}.md">raw</a>
+          {% if d.canonical_url %}<a class="ext-link" href="{{ d.canonical_url }}" aria-label="Canonical source for {{ d.title }}" title="Canonical source">↗</a>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>

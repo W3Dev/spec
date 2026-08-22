@@ -1,0 +1,18 @@
+{
+  "name": "w3dev-specs",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "w3dev specs — a registry of software specifications served at https://spec.w3dev.app",
+  "scripts": {
+    "dev": "eleventy --serve",
+    "build": "eleventy",
+    "validate": "node scripts/validate-frontmatter.mjs"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "gray-matter": "^4.0.3"
+  }
+}

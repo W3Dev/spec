@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if title %}{{ title }} · w3dev specs{% else %}w3dev specs{% endif %}</title>
+  {% if summary %}<meta name="description" content="{{ summary }}">{% endif %}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/site.css">
+
+  <!-- Inline, pre-hydration: read the persisted theme choice and stamp it on
+       <html> before first paint so there is no light->dark flash. -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("w3dev-specs-theme");
+        if (t === "light" || t === "dark") {
+          document.documentElement.setAttribute("data-theme", t);
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body class="{{ bodyClass or '' }}">
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="wordmark" href="/">w3dev specs</a>
+      <nav class="header-links" aria-label="Site">
+        <a href="{{ site.github }}">GitHub</a>
+        <a href="/specs.json">specs.json</a>
+        <a href="/llms.txt">llms.txt</a>
+        <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle color theme">
+          <svg class="icon icon-sun" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3.25"/><path d="M8 0.75v2M8 13.25v2M15.25 8h-2M2.75 8h-2M13.03 2.97l-1.4 1.4M4.37 11.63l-1.4 1.4M13.03 13.03l-1.4-1.4M4.37 4.37l-1.4-1.4"/></svg>
+          <svg class="icon icon-moon" viewBox="0 0 16 16" aria-hidden="true"><path d="M14 9.1A6 6 0 1 1 6.9 2 4.7 4.7 0 0 0 14 9.1Z"/></svg>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="site-main">
+    {{ content | safe }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <p class="footer-status mono">{{ collections.specs.length }} spec{% if collections.specs.length != 1 %}s{% endif %} indexed · last sync {{ buildDate }}</p>
+      <nav class="footer-links" aria-label="Registry links">
+        <a href="/specs.json">specs.json</a>
+        <a href="/llms.txt">llms.txt</a>
+        <a href="{{ site.github }}">GitHub</a>
+        <a href="{{ site.github }}#adding-a-spec">Contribute</a>
+      </nav>
+      <p class="footer-convention mono">/specs/&lt;slug&gt; renders for humans · /specs/&lt;slug&gt;.md serves the raw source for agents</p>
+    </div>
+  </footer>
+
+  <script src="/js/site.js"></script>
+</body>
+</html>

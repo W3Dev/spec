@@ -1,0 +1,40 @@
+---
+layout: base.njk
+bodyClass: page-spec
+---
+<article class="spec-detail">
+  <div class="spec-detail-head">
+    <span class="badge badge-{{ status }}">{{ status }}</span>
+    {% if number %}<span class="spec-number mono">spec-{{ number }}</span>{% endif %}
+  </div>
+
+  <h1 class="spec-title">{{ title }}</h1>
+  <p class="spec-summary">{{ summary }}</p>
+
+  <div class="spec-actions">
+    <button type="button" class="copy-raw-btn" id="copy-raw-btn" data-raw-url="/specs/{{ id }}.md">
+      <span class="copy-raw-label">Copy raw markdown</span>
+    </button>
+    <a class="raw-link mono" href="/specs/{{ id }}.md">/specs/{{ id }}.md</a>
+  </div>
+
+  <table class="facts-table">
+    {% if version %}<tr><th>Version</th><td class="mono">{{ version }}</td></tr>{% endif %}
+    {% if maturity %}<tr><th>Maturity</th><td class="mono">{{ maturity }}</td></tr>{% endif %}
+    <tr><th>Owner</th><td>{{ owner }}</td></tr>
+    <tr><th>Updated</th><td class="mono">{{ updated }}</td></tr>
+    {% if adopted_date %}<tr><th>Adopted</th><td class="mono">{{ adopted_date }}</td></tr>{% endif %}
+    {% if tags and tags.length %}<tr><th>Tags</th><td>{% for tag in tags %}<span class="pill">{{ tag }}</span>{% endfor %}</td></tr>{% endif %}
+    {% if applies_to and applies_to.length %}<tr><th>Applies to</th><td class="mono">{{ applies_to | join(", ") }}</td></tr>{% endif %}
+    {% if related and related.length %}<tr><th>Related</th><td class="mono">{{ related | join(", ") }}</td></tr>{% endif %}
+    {% if supersedes %}<tr><th>Supersedes</th><td class="mono">{{ supersedes }}</td></tr>{% endif %}
+    {% if superseded_by %}<tr><th>Superseded by</th><td class="mono">{{ superseded_by }}</td></tr>{% endif %}
+    {% if canonical_url %}<tr><th>Canonical URL</th><td><a href="{{ canonical_url }}">{{ canonical_url }}</a></td></tr>{% endif %}
+  </table>
+
+  <div class="spec-body">
+    {{ content | safe }}
+  </div>
+
+  <p class="raw-link-footer"><a href="/specs/{{ id }}.md" class="mono">View raw markdown source →</a></p>
+</article>
