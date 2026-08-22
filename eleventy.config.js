@@ -1,4 +1,4 @@
-import { toSpecEntry } from "./lib/spec-fields.mjs";
+import { toSpecEntry, hasChangelog } from "./lib/spec-fields.mjs";
 
 // Days-per-unit thresholds for the humanized "updated" column on the
 // registry table (server-rendered at build time — see relativeDate below).
@@ -28,6 +28,13 @@ export default function (eleventyConfig) {
   // spec can relative-link its own bundled files.
   eleventyConfig.addPassthroughCopy("specs/*/**");
 
+  // Same contract for archived specs: raw markdown (and any bundled
+  // assets) served byte-for-byte at /archive/<slug>/SPEC.md etc. Scoped to
+  // archive/<slug>/** so it never matches the top-level archive/.gitkeep
+  // (which keeps the empty directory in git but must not appear in the
+  // build output).
+  eleventyConfig.addPassthroughCopy("archive/*/**");
+
   // Static, hand-authored CSS/JS — no bundler, passthrough-copied as-is.
   eleventyConfig.addPassthroughCopy("css");
   eleventyConfig.addPassthroughCopy("js");
@@ -44,9 +51,24 @@ export default function (eleventyConfig) {
       .sort((a, b) => a.data.id.localeCompare(b.data.id))
   );
 
+  // Same shape, archived tree. Archived specs live at archive/<slug>/SPEC.md
+  // and always carry status "deprecated" (enforced by
+  // scripts/validate-frontmatter.mjs, not by this collection definition).
+  eleventyConfig.addCollection("archive", (collectionApi) =>
+    collectionApi
+      .getFilteredByGlob("archive/*/SPEC.md")
+      .sort((a, b) => a.data.id.localeCompare(b.data.id))
+  );
+
   // Expose the shared frontmatter -> index-entry mapper to templates
-  // (used by specs.json.11ty.js and llms.txt.11ty.js, but handy elsewhere too).
+  // (used by specs.json.11ty.js, archive.json.11ty.js, and
+  // llms.txt.11ty.js, but handy elsewhere too).
   eleventyConfig.addFilter("toSpecEntry", toSpecEntry);
+
+  // Whether specs/<id>/CHANGELOG.md (or archive/<id>/CHANGELOG.md, pass
+  // base="archive") exists on disk — drives the "Changelog" link on
+  // spec.njk. Derived from the filesystem, not frontmatter.
+  eleventyConfig.addFilter("hasChangelog", hasChangelog);
 
   // Humanizes an ISO date ("2026-08-20" -> "2d ago") for the registry table;
   // computed once at build time, not in the browser.

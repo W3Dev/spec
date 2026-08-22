@@ -82,6 +82,39 @@ subfolders.
 > `updated: 2026-08-22`. Unquoted, YAML parses it as a native date and it
 > stops being the plain `YYYY-MM-DD` string the schema and templates expect.
 
+## Versioning & archive
+
+- **Version pin.** Frontmatter `version` is the single source of truth for
+  the revision/version a spec currently follows (a dated revision, e.g.
+  MCP's `2026-07-28`, or a semver string). `SPEC.md` describes only the
+  current state — no version-history section in the body.
+- **CHANGELOG.md.** History lives in an optional sibling
+  `specs/<slug>/CHANGELOG.md`, in
+  [Keep a Changelog](https://keepachangelog.com) format. Add one the first
+  time a spec's `version` pin moves — every entry is self-contained
+  (written as if its links might die) plus a link to the commit/PR
+  (internal specs) or the upstream dated revision (external standards).
+  Served raw at `/specs/<slug>/CHANGELOG.md`; `specs.json` gains a
+  `changelog_url` for any spec that has one. A bump that needs more than a
+  changelog entry gets a runbook at
+  `specs/<slug>/references/migration-<old>-to-<new>.md`, linked from the
+  entry.
+- **Archive.** `specs/` holds only current, followed specs. To retire one:
+  `git mv specs/<slug> archive/<slug>` (mirrors the `specs/` layout), set
+  `status: deprecated` (+ `superseded_by` if something replaces it), and
+  add a final `CHANGELOG.md` entry. Archived specs render at
+  `/archive/<slug>/` with an Archived banner; the old `/specs/<slug>/` URL
+  becomes a redirect stub, never a 404; `/archive.json` lists them;
+  `llms.txt` gains an Archive section once non-empty.
+- **Generational breaks vs. bumps.** A spec whose contract is rewritten
+  wholesale (not just revised) is a new spec id using
+  `supersedes`/`superseded_by` — not a changelog entry on the old id.
+  In-place revisions and semver-style bumps stay the same spec id and get a
+  `CHANGELOG.md` entry instead.
+
+See [`spec-versioning`](specs/spec-versioning/SPEC.md) for the full
+convention.
+
 ## Local development
 
 ```sh

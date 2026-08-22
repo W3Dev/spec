@@ -2,7 +2,15 @@
 layout: base.njk
 bodyClass: page-spec
 ---
+{% set base = "archive" if archived else "specs" %}
 <article class="spec-detail">
+  {% if archived %}
+  <div class="archive-banner">
+    <strong>Archived.</strong> This spec is archived and no longer followed.
+    {% if superseded_by %}See <a href="/specs/{{ superseded_by }}/">{{ superseded_by }}</a> for the superseding spec.{% endif %}
+  </div>
+  {% endif %}
+
   <div class="spec-detail-head">
     <span class="badge badge-{{ status }}">{{ status }}</span>
     {% if number %}<span class="spec-number mono">spec-{{ number }}</span>{% endif %}
@@ -12,10 +20,13 @@ bodyClass: page-spec
   <p class="spec-summary">{{ summary }}</p>
 
   <div class="spec-actions">
-    <button type="button" class="copy-raw-btn" id="copy-raw-btn" data-raw-url="/specs/{{ id }}/SPEC.md">
+    <button type="button" class="copy-raw-btn" id="copy-raw-btn" data-raw-url="/{{ base }}/{{ id }}/SPEC.md">
       <span class="copy-raw-label">Copy raw markdown</span>
     </button>
-    <a class="raw-link mono" href="/specs/{{ id }}/SPEC.md">/specs/{{ id }}/SPEC.md</a>
+    <a class="raw-link mono" href="/{{ base }}/{{ id }}/SPEC.md">/{{ base }}/{{ id }}/SPEC.md</a>
+    {% if id | hasChangelog(base) %}
+    <a class="raw-link mono changelog-link" href="/{{ base }}/{{ id }}/CHANGELOG.md">Changelog</a>
+    {% endif %}
   </div>
 
   <table class="facts-table">
@@ -36,5 +47,5 @@ bodyClass: page-spec
     {{ content | safe }}
   </div>
 
-  <p class="raw-link-footer"><a href="/specs/{{ id }}/SPEC.md" class="mono">View raw markdown source →</a></p>
+  <p class="raw-link-footer"><a href="/{{ base }}/{{ id }}/SPEC.md" class="mono">View raw markdown source →</a></p>
 </article>

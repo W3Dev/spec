@@ -15,6 +15,7 @@ export default class {
 
   render({ collections }) {
     const entries = collections.specs.map((item) => toSpecEntry(item.data));
+    const archived = collections.archive.map((item) => toSpecEntry(item.data, "archive"));
 
     const lines = [
       "# Specs Directory",
@@ -25,6 +26,15 @@ export default class {
 
     for (const entry of entries) {
       lines.push(`- [${entry.title}](${SITE_URL}${entry.url}): ${entry.summary}`);
+    }
+
+    // Archived specs get their own section, appended after the active
+    // list, and omitted entirely when nothing is archived.
+    if (archived.length > 0) {
+      lines.push("", "## Archive", "");
+      for (const entry of archived) {
+        lines.push(`- [${entry.title}](${SITE_URL}${entry.url}): ${entry.summary}`);
+      }
     }
 
     return lines.join("\n") + "\n";

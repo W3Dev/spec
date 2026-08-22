@@ -1,0 +1,48 @@
+---
+layout: base.njk
+title: Archive
+bodyClass: page-archive
+eleventyExcludeFromCollections: true
+permalink: /archive/
+---
+<section class="identity-strip">
+  <h1 class="site-name">Archive</h1>
+  <p class="subline">Specs retired from the active registry. Each archived spec keeps its frontmatter, raw source, and (when it has one) its changelog.</p>
+  <p class="live-count mono">{{ collections.archive.length }} archived spec{% if collections.archive.length != 1 %}s{% endif %}</p>
+</section>
+
+<section class="registry-table-wrap">
+  {% if collections.archive.length %}
+  <div class="registry-table" role="table" aria-label="Archived specs">
+    <div class="table-row table-head" role="row">
+      <div class="cell cell-name" role="columnheader">Name</div>
+      <div class="cell cell-status" role="columnheader">Status</div>
+      <div class="cell cell-links" role="columnheader">Links</div>
+    </div>
+
+    <div class="table-body" role="rowgroup">
+      {% for spec in collections.archive %}
+      {% set d = spec.data %}
+      <div class="table-row" role="row">
+        <div class="cell cell-name" role="cell" data-label="Name">
+          <div class="name-stack">
+            <a class="row-title" href="/archive/{{ d.id }}/">{{ d.title }}</a>
+            <span class="row-meta mono">{{ d.id }}</span>
+            {% if d.superseded_by %}<span class="row-summary">Superseded by <a href="/specs/{{ d.superseded_by }}/">{{ d.superseded_by }}</a></span>{% endif %}
+          </div>
+        </div>
+        <div class="cell cell-status" role="cell" data-label="Status">
+          <span class="badge badge-{{ d.status }}">{{ d.status }}</span>
+        </div>
+        <div class="cell cell-links" role="cell" data-label="Links">
+          <a class="raw-link mono" href="/archive/{{ d.id }}/SPEC.md">raw</a>
+          {% if d.id | hasChangelog("archive") %}<a class="raw-link mono" href="/archive/{{ d.id }}/CHANGELOG.md">changelog</a>{% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <p class="results-empty">No archived specs yet.</p>
+  {% endif %}
+</section>

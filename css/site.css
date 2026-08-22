@@ -462,6 +462,23 @@ body.page-spec .site-main {
 .spec-actions .raw-link { color: var(--muted); font-size: 0.8rem; }
 .spec-actions .raw-link:hover { color: var(--accent); }
 
+/* ---------------------------------------------------------------------
+   Archive banner — shown at the top of an archived spec's detail page.
+   Reuses the gray/muted "deprecated" treatment (no new colors).
+   --------------------------------------------------------------------- */
+.archive-banner {
+  margin-bottom: 1.5rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--bg-raised);
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+.archive-banner strong { color: var(--text); }
+.archive-banner a { color: var(--accent); }
+
 .facts-table {
   margin-top: 1.5rem;
   width: 100%;
